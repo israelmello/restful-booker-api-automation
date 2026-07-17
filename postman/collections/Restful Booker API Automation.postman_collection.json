@@ -153,7 +153,10 @@
                   "});\r",
                   "\r",
                   "// Save bookingId\r",
-                  "pm.environment.set(\"bookingId\", bookingResponse.bookingid);"
+                  "pm.environment.set(\"bookingId\", bookingResponse.bookingid);\r",
+                  "\r",
+                  "// Save request body for future tests\r",
+                  "pm.environment.set(\"bookingRequest\", pm.request.body.raw);"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -180,6 +183,69 @@
               ],
               "path": [
                 "booking"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Booking by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseBody = pm.response.json();\r",
+                  "const requestBody = JSON.parse(pm.environment.get('createBookingRequest'));\r",
+                  "\r",
+                  "// ===== HTTP Validations =====\r",
+                  "\r",
+                  "pm.test(\"Status code should be 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "})\r",
+                  "\r",
+                  "pm.test(\"Response time should be below 1000 ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "})\r",
+                  "\r",
+                  "pm.test(\"Content-Type should be application/json\", function () {\r",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\"))\r",
+                  "        .to.include(\"application/json\");\r",
+                  "})\r",
+                  "\r",
+                  "// ===== Contract Validations =====\r",
+                  "\r",
+                  "pm.test(\"Response body should not be empty\", function () {\r",
+                  "    pm.expect(responseBody).to.not.be.empty;\r",
+                  "})\r",
+                  "\r",
+                  "pm.test(\"Booking dates should be an object\", function () {\r",
+                  "    pm.expect(responseBody.bookingdates).to.be.an('object');\r",
+                  "})\r",
+                  "\r",
+                  "// ===== Business Validations =====\r",
+                  "\r",
+                  "pm.test(\"Booking should match request payload\", function () {\r",
+                  "    pm.expect(responseBody).to.deep.equal(requestBody);\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/booking/{{bookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "booking",
+                "{{bookingId}}"
               ]
             }
           },
