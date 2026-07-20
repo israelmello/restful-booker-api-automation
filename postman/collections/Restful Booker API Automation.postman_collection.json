@@ -11,7 +11,7 @@
       "name": "Authentication",
       "item": [
         {
-          "name": "Create Token",
+          "name": "Generate Token",
           "event": [
             {
               "listen": "test",
@@ -41,6 +41,17 @@
                   "})\r",
                   "\r",
                   "pm.environment.set(\"token\", authResponse.token);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
                   ""
                 ],
                 "type": "text/javascript",
@@ -85,78 +96,115 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "const bookingResponse = pm.response.json();\r",
-                  "const requestBody = JSON.parse(pm.request.body.raw);\r",
+                  "const responseBody = pm.response.json()\r",
+                  "const requestBody = JSON.parse(pm.request.body.raw)\r",
                   "\r",
-                  "// Status Code\r",
-                  "pm.test(\"Should return status code 201\", function () {\r",
-                  "    pm.response.to.have.status(201);\r",
+                  "// ===== HTTP Validations =====\r",
+                  "\r",
+                  "pm.test('Status code should be 201', function () {\r",
+                  "    pm.response.to.have.status(201)\r",
                   "})\r",
                   "\r",
-                  "// Response Time\r",
-                  "pm.test(\"Response time should be below 1000 ms\", function () {\r",
-                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "pm.test('Response time should be below 1000 ms', function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000)\r",
                   "})\r",
                   "\r",
-                  "// Content-Type\r",
-                  "pm.test(\"Response should be JSON\", function () {\r",
-                  "    pm.response.to.have.header(\"Content-Type\");\r",
-                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                  "pm.test('Content-Type should be application/json', function () {\r",
+                  "    pm.expect(pm.response.headers.get('Content-Type'))\r",
+                  "        .to.include('application/json')\r",
                   "})\r",
                   "\r",
-                  "// bookingid\r",
-                  "pm.test(\"Should return bookingid\", function () {\r",
-                  "    pm.expect(bookingResponse.bookingid).to.exist;\r",
+                  "// ===== Contract Validations =====\r",
+                  "\r",
+                  "pm.test('Response body should be an object', function () {\r",
+                  "    pm.expect(responseBody).to.be.an('object')\r",
                   "})\r",
                   "\r",
-                  "pm.test(\"bookingid should be a number\", function () {\r",
-                  "    pm.expect(bookingResponse.bookingid).to.be.a(\"number\");\r",
+                  "pm.test('Response should contain bookingid', function () {\r",
+                  "    pm.expect(responseBody).to.have.property('bookingid')\r",
                   "})\r",
                   "\r",
-                  "// booking\r",
-                  "pm.test(\"Booking should be an object\", function () {\r",
-                  "    pm.expect(bookingResponse.booking).to.be.an(\"object\");\r",
+                  "pm.test('BookingId should be a number', function () {\r",
+                  "    pm.expect(responseBody.bookingid).to.be.a('number')\r",
                   "})\r",
                   "\r",
-                  "// firstname\r",
-                  "pm.test(\"Firstname should match request\", function () {\r",
-                  "    pm.expect(bookingResponse.booking.firstname).to.eql(requestBody.firstname);\r",
+                  "pm.test('Response should contain booking', function () {\r",
+                  "    pm.expect(responseBody).to.have.property('booking')\r",
                   "})\r",
                   "\r",
-                  "// lastname\r",
-                  "pm.test(\"Lastname should match request\", function () {\r",
-                  "    pm.expect(bookingResponse.booking.lastname).to.eql(requestBody.lastname);\r",
+                  "pm.test('Booking should be an object', function () {\r",
+                  "    pm.expect(responseBody.booking).to.be.an('object')\r",
                   "})\r",
                   "\r",
-                  "// totalprice\r",
-                  "pm.test(\"Total price should match request\", function () {\r",
-                  "    pm.expect(bookingResponse.booking.totalprice).to.eql(requestBody.totalprice);\r",
+                  "pm.test('Booking dates should be an object', function () {\r",
+                  "    pm.expect(responseBody.booking.bookingdates).to.be.an('object')\r",
                   "})\r",
                   "\r",
-                  "// depositpaid\r",
-                  "pm.test(\"Deposit paid should match request\", function () {\r",
-                  "    pm.expect(bookingResponse.booking.depositpaid).to.eql(requestBody.depositpaid);\r",
+                  "pm.test('Firstname should be a string', function () {\r",
+                  "    pm.expect(responseBody.booking.firstname).to.be.a('string')\r",
                   "})\r",
                   "\r",
-                  "// bookingdates\r",
-                  "pm.test(\"Checkin date should match request\", function () {\r",
-                  "    pm.expect(bookingResponse.booking.bookingdates.checkin).to.eql(requestBody.bookingdates.checkin);\r",
+                  "pm.test('Lastname should be a string', function () {\r",
+                  "    pm.expect(responseBody.booking.lastname).to.be.a('string')\r",
                   "})\r",
                   "\r",
-                  "pm.test(\"Checkout date should match request\", function () {\r",
-                  "    pm.expect(bookingResponse.booking.bookingdates.checkout).to.eql(requestBody.bookingdates.checkout);\r",
+                  "pm.test('Total price should be a number', function () {\r",
+                  "    pm.expect(responseBody.booking.totalprice).to.be.a('number')\r",
                   "})\r",
                   "\r",
-                  "// additionalneeds\r",
-                  "pm.test(\"Additional needs should match request\", function () {\r",
-                  "    pm.expect(bookingResponse.booking.additionalneeds).to.eql(requestBody.additionalneeds);\r",
+                  "pm.test('Deposit paid should be a boolean', function () {\r",
+                  "    pm.expect(responseBody.booking.depositpaid).to.be.a('boolean')\r",
                   "})\r",
                   "\r",
-                  "// Save bookingId\r",
-                  "pm.environment.set(\"bookingId\", bookingResponse.bookingid);\r",
+                  "pm.test('Checkin should be a string', function () {\r",
+                  "    pm.expect(responseBody.booking.bookingdates.checkin).to.be.a('string')\r",
+                  "})\r",
                   "\r",
-                  "// Save request body for future tests\r",
-                  "pm.environment.set(\"createBookingRequest\", pm.request.body.raw);"
+                  "pm.test('Checkout should be a string', function () {\r",
+                  "    pm.expect(responseBody.booking.bookingdates.checkout).to.be.a('string')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Additional needs should be a string', function () {\r",
+                  "    pm.expect(responseBody.booking.additionalneeds).to.be.a('string')\r",
+                  "})\r",
+                  "\r",
+                  "// ===== Business Validations =====\r",
+                  "\r",
+                  "pm.test('Firstname should match request', function () {\r",
+                  "    pm.expect(responseBody.booking.firstname).to.eql(requestBody.firstname)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Lastname should match request', function () {\r",
+                  "    pm.expect(responseBody.booking.lastname).to.eql(requestBody.lastname)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Total price should match request', function () {\r",
+                  "    pm.expect(responseBody.booking.totalprice).to.eql(requestBody.totalprice)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Deposit paid should match request', function () {\r",
+                  "    pm.expect(responseBody.booking.depositpaid).to.eql(requestBody.depositpaid)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Checkin date should match request', function () {\r",
+                  "    pm.expect(responseBody.booking.bookingdates.checkin)\r",
+                  "        .to.eql(requestBody.bookingdates.checkin)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Checkout date should match request', function () {\r",
+                  "    pm.expect(responseBody.booking.bookingdates.checkout)\r",
+                  "        .to.eql(requestBody.bookingdates.checkout)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Additional needs should match request', function () {\r",
+                  "    pm.expect(responseBody.booking.additionalneeds)\r",
+                  "        .to.eql(requestBody.additionalneeds)\r",
+                  "})\r",
+                  "\r",
+                  "// ===== Environment Variables =====\r",
+                  "\r",
+                  "pm.environment.set('bookingId', responseBody.bookingid)\r",
+                  "pm.environment.set('createBookingRequest', pm.request.body.raw)"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -451,7 +499,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"firstname\": \"Israel Automation\"\r\n}",
+              "raw": "{\r\n    \"firstname\": \"Israel Partial Update\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -486,6 +534,18 @@
                   "\r",
                   "pm.test('Response time should be below 1000 ms', function () {\r",
                   "    pm.expect(pm.response.responseTime).to.be.below(1000)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Content-Type should be text/plain', function () {\r",
+                  "    pm.expect(pm.response.headers.get('Content-Type'))\r",
+                  "        .to.include('text/plain')\r",
+                  "})\r",
+                  "\r",
+                  "// ===== Contract Validations =====\r",
+                  "\r",
+                  "pm.test('Response body should be \"Created\"', function () {\r",
+                  "  //  pm.expect(pm.response).to.eql('Created')\r",
+                  "    pm.expect(pm.response.text()).to.eql('Created')\r",
                   "})"
                 ],
                 "type": "text/javascript",
@@ -520,7 +580,404 @@
     },
     {
       "name": "Negative Tests",
-      "item": []
+      "item": [
+        {
+          "name": "authentication",
+          "item": [
+            {
+              "name": "Generate Token - Invalid Credentials",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const responseBody = pm.response.json()\r",
+                      "\r",
+                      "// ===== HTTP Validations =====\r",
+                      "\r",
+                      "pm.test('Status code should be 200', function () {\r",
+                      "    pm.response.to.have.status(200)\r",
+                      "})\r",
+                      "\r",
+                      "pm.test('Response time should be below 1000 ms', function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(1000)\r",
+                      "})\r",
+                      "\r",
+                      "pm.test('Content-Type should be application/json', function () {\r",
+                      "    pm.expect(pm.response.headers.get('Content-Type'))\r",
+                      "        .to.include('application/json')\r",
+                      "})\r",
+                      "\r",
+                      "// ===== Contract Validations =====\r",
+                      "\r",
+                      "pm.test('Response body should not be empty', function () {\r",
+                      "    pm.expect(responseBody).to.not.be.empty\r",
+                      "})\r",
+                      "\r",
+                      "pm.test('Response should contain reason', function () {\r",
+                      "    pm.expect(responseBody).to.have.property('reason')\r",
+                      "})\r",
+                      "\r",
+                      "pm.test('Reason should be a string', function () {\r",
+                      "    pm.expect(responseBody.reason).to.be.a('string')\r",
+                      "})\r",
+                      "\r",
+                      "// ===== Business Validations =====\r",
+                      "\r",
+                      "pm.test('Should return bad credentials message', function () {\r",
+                      "    pm.expect(responseBody.reason).to.eql('Bad credentials')\r",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"username\": \"admin\",\r\n  \"password\": \"password1234\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "booking",
+          "item": [
+            {
+              "name": "Get Booking - Nonexistent ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const responseBody = pm.response.text()\r",
+                      "\r",
+                      "// ===== HTTP Validations =====\r",
+                      "\r",
+                      "pm.test('Status code should be 404', function () {\r",
+                      "    pm.response.to.have.status(404)\r",
+                      "})\r",
+                      "\r",
+                      "pm.test('Response time should be below 1000 ms', function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(1000)\r",
+                      "})\r",
+                      "\r",
+                      "pm.test('Content-Type should be text/plain', function () {\r",
+                      "    pm.expect(pm.response.headers.get('Content-Type'))\r",
+                      "        .to.include('text/plain')\r",
+                      "})\r",
+                      "\r",
+                      "// ===== Contract Validations =====\r",
+                      "\r",
+                      "pm.test('Response body should not be empty', function () {\r",
+                      "    pm.expect(responseBody).to.not.be.empty\r",
+                      "})\r",
+                      "\r",
+                      "pm.test('Response body should be a string', function () {\r",
+                      "    pm.expect(responseBody).to.be.a('string')\r",
+                      "})\r",
+                      "\r",
+                      "// ===== Business Validations =====\r",
+                      "\r",
+                      "pm.test('Should return \"Not Found\"', function () {\r",
+                      "    pm.expect(responseBody).to.eql('Not Found')\r",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Cookie",
+                    "value": "token={{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"firstname\": \"Israel Automation\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/booking/999999999",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "booking",
+                    "999999999"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Booking - Without Authentication",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const responseBody = pm.response.text()\r",
+                      "\r",
+                      "// ===== HTTP Validations =====\r",
+                      "\r",
+                      "pm.test('Status code should be 403', function () {\r",
+                      "    pm.response.to.have.status(403)\r",
+                      "})\r",
+                      "\r",
+                      "pm.test('Response time should be below 1000 ms', function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(1000)\r",
+                      "})\r",
+                      "\r",
+                      "pm.test('Content-Type should be text/plain', function () {\r",
+                      "    pm.expect(pm.response.headers.get('Content-Type'))\r",
+                      "        .to.include('text/plain')\r",
+                      "})\r",
+                      "\r",
+                      "// ===== Contract Validations =====\r",
+                      "\r",
+                      "pm.test('Response body should not be empty', function () {\r",
+                      "    pm.expect(responseBody).to.not.be.empty\r",
+                      "})\r",
+                      "\r",
+                      "pm.test('Response body should be a string', function () {\r",
+                      "    pm.expect(responseBody).to.be.a('string')\r",
+                      "})\r",
+                      "// ===== Business Validations =====\r",
+                      "\r",
+                      "pm.test('Should return \"Forbidden\" message', function () {\r",
+                      "    pm.expect(responseBody).to.eql('Forbidden')\r",
+                      "})\r",
+                      "\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"firstname\": \"Israel Updated\",\r\n    \"lastname\": \"Mello\",\r\n    \"totalprice\": 2500,\r\n    \"depositpaid\": false,\r\n    \"bookingdates\": {\r\n        \"checkin\": \"2026-08-01\",\r\n        \"checkout\": \"2026-08-10\"\r\n    },\r\n    \"additionalneeds\": \"Dinner\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/booking/{{bookingId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "booking",
+                    "{{bookingId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Booking - Invalid Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const responseBody = pm.response.text()\r",
+                      "\r",
+                      "// ===== HTTP Validations =====\r",
+                      "\r",
+                      "pm.test('Status code should be 403', function () {\r",
+                      "    pm.response.to.have.status(403)\r",
+                      "})\r",
+                      "\r",
+                      "pm.test('Response time should be below 1000 ms', function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(1000)\r",
+                      "})\r",
+                      "\r",
+                      "pm.test('Content-Type should be text/plain', function () {\r",
+                      "    pm.expect(pm.response.headers.get('Content-Type'))\r",
+                      "        .to.include('text/plain')\r",
+                      "})\r",
+                      "\r",
+                      "// ===== Contract Validations =====\r",
+                      "\r",
+                      "pm.test('Response body should not be empty', function () {\r",
+                      "    pm.expect(responseBody).to.not.be.empty\r",
+                      "})\r",
+                      "\r",
+                      "pm.test('Response body should be a string', function () {\r",
+                      "    pm.expect(responseBody).to.be.a('string')\r",
+                      "})\r",
+                      "// ===== Business Validations =====\r",
+                      "\r",
+                      "pm.test('Should return \"Forbidden\" message', function () {\r",
+                      "    pm.expect(responseBody).to.eql('Forbidden')\r",
+                      "})\r",
+                      "\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Cookie",
+                    "value": "sdadas",
+                    "type": "text",
+                    "disabled": true
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"firstname\": \"Israel Updated\",\r\n    \"lastname\": \"Mello\",\r\n    \"totalprice\": 2500,\r\n    \"depositpaid\": false,\r\n    \"bookingdates\": {\r\n        \"checkin\": \"2026-08-01\",\r\n        \"checkout\": \"2026-08-10\"\r\n    },\r\n    \"additionalneeds\": \"Dinner\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/booking/{{bookingId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "booking",
+                    "{{bookingId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Booking - Invalid Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const responseBody = pm.response.text()\r",
+                      "\r",
+                      "// ===== HTTP Validations =====\r",
+                      "\r",
+                      "pm.test('Status code should be 403', function () {\r",
+                      "    pm.response.to.have.status(403)\r",
+                      "})\r",
+                      "\r",
+                      "pm.test('Response time should be below 1000 ms', function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(1000)\r",
+                      "})\r",
+                      "\r",
+                      "pm.test('Content-Type should be text/plain', function () {\r",
+                      "    pm.expect(pm.response.headers.get('Content-Type'))\r",
+                      "        .to.include('text/plain')\r",
+                      "})\r",
+                      "\r",
+                      "// ===== Contract Validations =====\r",
+                      "\r",
+                      "pm.test('Response body should not be empty', function () {\r",
+                      "    pm.expect(responseBody).to.not.be.empty\r",
+                      "})\r",
+                      "\r",
+                      "pm.test('Response body should be a string', function () {\r",
+                      "    pm.expect(responseBody).to.be.a('string')\r",
+                      "})\r",
+                      "\r",
+                      "// ===== Business Validations =====\r",
+                      "\r",
+                      "pm.test('Should deny delete without authentication', function () {\r",
+                      "    pm.expect(responseBody).to.eql('Forbidden')\r",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/booking/{{bookingId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "booking",
+                    "{{bookingId}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
     }
   ]
 }
