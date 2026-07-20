@@ -422,6 +422,16 @@
                   "pm.test('Additional needs should remain unchanged', function () {\r",
                   "    pm.expect(responseBody.additionalneeds)\r",
                   "        .to.eql(previousBooking.additionalneeds)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Checkin date should remain unchanged', function () {\r",
+                  "    pm.expect(responseBody.bookingdates.checkin)\r",
+                  "        .to.eql(previousBooking.bookingdates.checkin)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Checkout date should remain unchanged', function () {\r",
+                  "    pm.expect(responseBody.bookingdates.checkout)\r",
+                  "        .to.eql(previousBooking.bookingdates.checkout)\r",
                   "})"
                 ],
                 "type": "text/javascript",
@@ -448,6 +458,51 @@
                 }
               }
             },
+            "url": {
+              "raw": "{{baseUrl}}/booking/{{bookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "booking",
+                "{{bookingId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Booking",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// ===== HTTP Validations =====\r",
+                  "\r",
+                  "pm.test('Status code should be 201', function () {\r",
+                  "    pm.response.to.have.status(201)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Response time should be below 1000 ms', function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000)\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "token={{token}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/booking/{{bookingId}}",
               "host": [
