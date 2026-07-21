@@ -1,0 +1,32 @@
+{
+  "name": "restful-booker-api-automation",
+  "version": "1.0.0",
+  "description": "API test automation project developed with Postman and Newman.",
+  "scripts": {
+    "test": "newman run postman/collections/restful-booker-api-automation.postman_collection.json -e postman/environments/restful-booker-api-automation.postman_environment.json",
+    "report": "newman run postman/collections/restful-booker-api-automation.postman_collection.json -e postman/environments/restful-booker-api-automation.postman_environment.json -r cli,htmlextra --reporter-htmlextra-export reports/report.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/israelmello/restful-booker-api-automation.git"
+  },
+  "keywords": [
+    "postman",
+    "newman",
+    "api",
+    "automation",
+    "qa",
+    "testing",
+    "restful-booker"
+  ],
+  "author": "Israel Mello",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/israelmello/restful-booker-api-automation/issues"
+  },
+  "homepage": "https://github.com/israelmello/restful-booker-api-automation#readme",
+  "devDependencies": {
+    "newman": "^6.2.2",
+    "newman-reporter-htmlextra": "^1.23.1"
+  }
+}
