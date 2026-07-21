@@ -1,14 +1,12 @@
 # Restful Booker API Automation
 
-![API Tests](https://github.com/israelmello/restful-booker-api-automation/actions/workflows/api-tests.yml/badge.svg)
+API automation testing project developed to demonstrate **QA Automation practices** using **Postman**, **Newman**, and **Continuous Integration with GitHub Actions**.
 
-Projeto de automação de testes de API desenvolvido para demonstrar práticas de **QA Automation**, utilizando **Postman**, **Newman** e integração contínua através do **GitHub Actions**.
-
-O objetivo do projeto é validar os principais fluxos da API **Restful Booker**, aplicando testes funcionais, validações de contrato, regras de negócio e execução automatizada em pipeline CI/CD.
+The main goal of this project is to validate the main workflows of the **Restful Booker API**, applying functional testing, contract validation, business rules validation, and automated execution through a CI/CD pipeline.
 
 ---
 
-## 🚀 Tecnologias utilizadas
+## 🚀 Technologies Used
 
 - Postman
 - Newman
@@ -21,77 +19,77 @@ O objetivo do projeto é validar os principais fluxos da API **Restful Booker**,
 
 ---
 
-# 📌 Cenários automatizados
+# 📌 Automated Test Scenarios
 
 ## Authentication
 
-### Criar token
+### Create Token
 
-Valida:
+Validations:
 
-- Criação de token de autenticação
-- Status code esperado
-- Estrutura da resposta
+- Token creation flow
+- Expected status code
+- Response structure validation
 
 ---
 
 ## Booking
 
-Fluxos automatizados:
+Automated flows:
 
-- Criar reserva
-- Consultar reserva
-- Atualizar reserva
-- Excluir reserva
+- Create booking
+- Get booking
+- Update booking
+- Delete booking
 
 ---
 
-# ✅ Validações implementadas
+# ✅ Implemented Validations
 
-A suíte de testes possui validações como:
+The test suite includes different levels of validation:
 
-### HTTP
+## HTTP Validations
 
 ✔ Status Code  
 ✔ Response Time  
 ✔ Headers  
 ✔ Content-Type  
 
-### Contrato da API
+## API Contract Validation
 
-✔ Campos obrigatórios  
-✔ Estrutura do JSON  
-✔ Tipos de dados retornados  
+✔ Required fields validation  
+✔ JSON structure validation  
+✔ Data type validation  
 
-### Regras de negócio
+## Business Rules Validation
 
-✔ Comparação entre Request e Response  
-✔ Validação dos dados enviados  
-✔ Validação dos dados retornados  
+✔ Request vs Response comparison  
+✔ Sent data validation  
+✔ Returned data validation  
 
 ---
 
-# ⚙️ Execução local
+# ⚙️ Local Execution
 
-## Instalar dependências
+## Install dependencies
 
 ```bash
 npm install
 ```
 
-## Executar testes
+## Run API tests
 
 ```bash
 npm test
 ```
 
-## Gerar relatório HTML
+## Generate HTML report
 
 ```bash
 npm run report
 ```
 
-Após a execução, o relatório estará disponível em:
+The generated report will be available at:
 
 ```
 reports/report.html
@@ -99,44 +97,44 @@ reports/report.html
 
 ---
 
-# 🔄 Pipeline CI/CD
+# 🔄 CI/CD Pipeline
 
-O projeto possui integração com GitHub Actions.
+This project uses **GitHub Actions** to automatically execute API tests.
 
-A cada execução do workflow:
+Pipeline workflow:
 
 ```
 Push
  |
 GitHub Actions
  |
-Instalação das dependências
+Install dependencies
  |
-Execução Newman
+Run Newman
  |
-Execução dos testes API
+Execute API tests
  |
-Geração do relatório HTML
+Generate HTML report
  |
-Upload do Artifact
+Upload Artifact
 ```
 
 ---
 
-# 📊 Evidências
+# 📊 Test Evidence
 
-O pipeline gera um relatório HTML contendo:
+The pipeline generates an HTML report containing:
 
-- Resultado dos testes
-- Requests executadas
-- Tempo de resposta
-- Status das validações
+- Executed requests
+- Test results
+- Response times
+- Validation details
 
-O relatório fica disponível como Artifact dentro da execução do GitHub Actions.
+The report is stored as a GitHub Actions Artifact after each execution.
 
 ---
 
-# 📂 Estrutura do projeto
+# 📂 Project Structure
 
 ```
 restful-booker-api-automation/
@@ -160,20 +158,22 @@ restful-booker-api-automation/
 
 ---
 
-# 🎯 Objetivo profissional
+# 🎯 Skills Demonstrated
 
-Este projeto demonstra conhecimentos em:
+This project demonstrates experience with:
 
-- Testes automatizados de API
-- Criação de cenários de teste
-- Validação de respostas HTTP
-- JavaScript aplicado ao QA
-- Ferramentas de automação
-- Integração contínua (CI/CD)
+- API Testing Automation
+- Test Scenario Design
+- HTTP Validation
+- JavaScript for QA Automation
+- Postman Collections
+- Newman CLI Execution
+- CI/CD Integration
+- Automated Test Reporting
 
 ---
 
-## Autor
+## Author
 
 **Israel Mello**
 
